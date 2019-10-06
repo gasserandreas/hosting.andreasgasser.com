@@ -5,9 +5,13 @@ variable "account_id" {}
 
 variable "app_name" {}
 
-variable "root_domain_name" {}
+variable "prod_root_domain_name" {}
 
-variable "www_domain_name" {}
+variable "prod_www_domain_name" {}
+
+variable "test_root_domain_name" {}
+
+variable "test_www_domain_name" {}
 
 variable "credentials_file" {}
 
@@ -20,25 +24,50 @@ provider "aws" {
   profile                 = "${var.profile}"
 }
 
-module "certificate" {
+# prod environment
+module "prod_certificate" {
   source           = "./acm-certificate"
-  root_domain_name = "${var.root_domain_name}"
-  www_domain_name  = "${var.www_domain_name}"
+  root_domain_name = "${var.prod_root_domain_name}"
+  www_domain_name  = "${var.prod_www_domain_name}"
 }
 
-module "bucket" {
+module "prod_bucket" {
   source = "./s3"
 
   app_region       = "${var.app_region}"
   account_id       = "${var.account_id}"
   app_name         = "${var.app_name}"
-  root_domain_name = "${var.root_domain_name}"
+  root_domain_name = "${var.prod_root_domain_name}"
 }
 
-module "cloudfront" {
+module "prod_cloudfront" {
   source                     = "./cloudfront"
-  root_domain_name           = "${var.root_domain_name}"
-  www_domain_name            = "${var.www_domain_name}"
-  s3_bucket_website_endpoint = "${module.bucket.website_endpoint}"
-  acm_certification_arn      = "${module.certificate.arn_hosting}"
+  root_domain_name           = "${var.prod_root_domain_name}"
+  www_domain_name            = "${var.prod_www_domain_name}"
+  s3_bucket_website_endpoint = "${module.prod_bucket.website_endpoint}"
+  acm_certification_arn      = "${module.prod_certificate.arn_hosting}"
+}
+
+# test environment
+module "test_certificate" {
+  source           = "./acm-certificate"
+  root_domain_name = "${var.test_root_domain_name}"
+  www_domain_name  = "${var.test_www_domain_name}"
+}
+
+module "test_bucket" {
+  source = "./s3"
+
+  app_region       = "${var.app_region}"
+  account_id       = "${var.account_id}"
+  app_name         = "${var.app_name}"
+  root_domain_name = "${var.test_root_domain_name}"
+}
+
+module "test_cloudfront" {
+  source                     = "./cloudfront"
+  root_domain_name           = "${var.test_root_domain_name}"
+  www_domain_name            = "${var.test_www_domain_name}"
+  s3_bucket_website_endpoint = "${module.test_bucket.website_endpoint}"
+  acm_certification_arn      = "${module.test_certificate.arn_hosting}"
 }
