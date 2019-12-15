@@ -13,6 +13,10 @@ variable "test_root_domain_name" {}
 
 variable "test_www_domain_name" {}
 
+variable "storybook_root_domain_name" {}
+
+variable "storybook_www_domain_name" {}
+
 variable "credentials_file" {}
 
 variable "profile" {}
@@ -46,6 +50,30 @@ module "prod_cloudfront" {
   www_domain_name            = "${var.prod_www_domain_name}"
   s3_bucket_website_endpoint = "${module.prod_bucket.website_endpoint}"
   acm_certification_arn      = "${module.prod_certificate.arn_hosting}"
+}
+
+# storybook environment
+module "storybook_certificate" {
+  source           = "./acm-certificate"
+  root_domain_name = "${var.storybook_root_domain_name}"
+  www_domain_name  = "${var.storybook_www_domain_name}"
+}
+
+module "storybook_bucket" {
+  source = "./s3-hosting"
+
+  app_region       = "${var.app_region}"
+  account_id       = "${var.account_id}"
+  app_name         = "${var.app_name}"
+  root_domain_name = "${var.storybook_root_domain_name}"
+}
+
+module "storybook_cloudfront" {
+  source                     = "./cloudfront"
+  root_domain_name           = "${var.storybook_root_domain_name}"
+  www_domain_name            = "${var.storybook_www_domain_name}"
+  s3_bucket_website_endpoint = "${module.storybook_bucket.website_endpoint}"
+  acm_certification_arn      = "${module.storybook_certificate.arn_hosting}"
 }
 
 # test environment
@@ -165,6 +193,8 @@ resource "aws_iam_role_policy" "master" {
       "Resource": [
         "${module.prod_bucket.bucket_arn}",
         "${module.prod_bucket.bucket_arn}/*",
+        "${module.storybook_bucket.bucket_arn}",
+        "${module.storybook_bucket.bucket_arn}/*",
         "${module.utils.bucket_arn}",
         "${module.utils.bucket_arn}/*"
       ]

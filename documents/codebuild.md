@@ -43,6 +43,7 @@ Environment variables:
 - `S3_DEPLOY_BUCKET`: s3 deployment bucket url
 - `DISTRIBUTION_ID`: cloudfront distribution id for environemnt
 - `S3_UTILS_BUCKET`: s3 bucket for utility files and scripts 
+- `S3_DEPLOY_STORYBOOK_BUCKET`: s3 bucket for storybook deployment
 - `ENV_VAR`: specify .env file for given environment
 - `GIT_BRANCH`: set Git branch
 - `GH_ACCESS_TOKEN`: GitHub access token created in security access setting
