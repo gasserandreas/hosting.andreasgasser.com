@@ -16,6 +16,13 @@ Webhook: yes
 Branch filter: your desired build branch
 Build badge: yes
 
+### Primary source webhook events
+Webhook - optional: Rebuild every time a code change is pushed to this repository
+Event type: PUSH
+Start a build under these conditions
+- HEAD_REF - optional: ^refs/heads/_branch_$
+ (Note: don't miss the $ sign at the end)
+
 ### Environment: How to build
 Environment image: AWS managed
 type: Ubuntu --> node --> nodejs:10 (or higher)
