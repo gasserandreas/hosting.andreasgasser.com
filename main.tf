@@ -20,6 +20,8 @@ variable "storybook_www_domain_name" {}
 variable "credentials_file" {}
 
 variable "profile" {}
+variable "api_domain_name" {}
+variable "api_version" {}
 
 # provider
 provider "aws" {
@@ -74,6 +76,16 @@ module "storybook_cloudfront" {
   www_domain_name            = "${var.storybook_www_domain_name}"
   s3_bucket_website_endpoint = "${module.storybook_bucket.website_endpoint}"
   acm_certification_arn      = "${module.storybook_certificate.arn_hosting}"
+}
+
+# api implementation
+module "api" {
+  source = "./api-gateway"
+  account_id = "${var.account_id}"
+  app_name = "${var.app_name}"
+  app_region = "${var.app_region}"
+  api_domain_name = "${var.api_domain_name}"
+  api_version = "${var.api_version}"
 }
 
 # test environment
