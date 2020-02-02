@@ -6,6 +6,7 @@ variable "app_name" {}
 variable "lambda_role" {}
 variable "auth_app_secret" {}
 variable "auth_app_password" {}
+variable "api_app_email" {}
 
 
 # user resources for get (list), post, put and delete
@@ -112,4 +113,5 @@ module "rest_lambda" {
   resource_path  = "${aws_api_gateway_resource.rest.path}"
   auth_app_secret = "${var.auth_app_secret}"
   auth_app_password = "${var.auth_app_password}"
+  api_app_email = "${var.api_app_email}"
 }

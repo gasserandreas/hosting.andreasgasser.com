@@ -31,6 +31,9 @@ variable "auth_app_password" {}
 
 variable "api_stage" {}
 
+variable "api_app_email" {}
+
+
 # provider
 provider "aws" {
   region = "${var.app_region}"
@@ -98,6 +101,7 @@ module "gateway" {
   api_stage       = "${var.api_stage}"
   auth_app_secret = "${var.auth_app_secret}"
   auth_app_password = "${var.auth_app_password}"
+  api_app_email = "${var.api_app_email}"
 }
 
 # test environment

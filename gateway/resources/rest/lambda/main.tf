@@ -8,6 +8,7 @@ variable "gateway_name" {}
 variable "resource_path" {}
 variable "auth_app_secret" {}
 variable "auth_app_password" {}
+variable "api_app_email" {}
 
 resource "aws_lambda_function" "post_lambda" {
   filename         = "./rest-server/dist.zip"
@@ -23,6 +24,7 @@ resource "aws_lambda_function" "post_lambda" {
     variables = {
       APP_SECRET = "${var.auth_app_secret}"
       APP_PASSWORD = "${var.auth_app_password}"
+      APP_EMAIL = "${var.api_app_email}"
     }
   }
 }

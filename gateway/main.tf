@@ -6,6 +6,7 @@ variable "api_version" {}
 variable "api_stage" {}
 variable "auth_app_secret" {}
 variable "auth_app_password" {}
+variable "api_app_email" {}
 
 
 # create api
@@ -26,6 +27,7 @@ module "resource_rest" {
 
   auth_app_secret = "${var.auth_app_secret}"
   auth_app_password = "${var.auth_app_password}"
+  api_app_email = "${var.api_app_email}"
 }
 
 # lambda execution role
@@ -61,6 +63,17 @@ data "aws_iam_policy_document" "cloudwatch_log_group_lambda" {
     resources = [
       "arn:aws:logs:*:*:*",
     ]
+  }
+
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "ses:SendEmail",
+      "ses:SendRawEmail"
+    ]
+
+    resources = ["*"]
   }
 }
 
