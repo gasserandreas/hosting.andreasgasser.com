@@ -6,15 +6,25 @@ variable "api" {}
 variable "gateway_method" {}
 variable "gateway_name" {}
 variable "resource_path" {}
+variable "auth_app_secret" {}
+variable "auth_app_password" {}
 
 resource "aws_lambda_function" "post_lambda" {
-  filename         = "./api-gateway/post/post.zip"
-  function_name    = "gasserandreas_com_${var.gateway_name}_post"
+  filename         = "./rest-server/dist.zip"
+  function_name    = "andreasgasser_com__${var.gateway_name}_rest"
   role             = "${var.lambda_role}"
-  handler          = "index.handler"
+  handler          = "index.rest"
   runtime          = "nodejs10.x"
-  # source_code_hash = "${base64sha256(file("./api-gateway/post/post.zip"))}"
-  source_code_hash = "${filebase64sha256("./api-gateway/post/post.zip")}"
+  source_code_hash = "${filebase64sha256("./rest-server/dist.zip")}"
+  memory_size = 512
+  timeout = "10"
+
+  environment {
+    variables = {
+      APP_SECRET = "${var.auth_app_secret}"
+      APP_PASSWORD = "${var.auth_app_password}"
+    }
+  }
 }
 
 resource "aws_lambda_permission" "apigw_lambda" {
