@@ -20,8 +20,16 @@ variable "storybook_www_domain_name" {}
 variable "credentials_file" {}
 
 variable "profile" {}
+
 variable "api_domain_name" {}
+
 variable "api_version" {}
+
+variable "auth_app_secret" {}
+
+variable "auth_app_password" {}
+
+variable "api_stage" {}
 
 # provider
 provider "aws" {
@@ -79,13 +87,17 @@ module "storybook_cloudfront" {
 }
 
 # api implementation
-module "api" {
-  source = "./api-gateway"
-  account_id = "${var.account_id}"
-  app_name = "${var.app_name}"
-  app_region = "${var.app_region}"
+module "gateway" {
+  source = "./gateway"
+
+  app_region      = "${var.app_region}"
+  account_id      = "${var.account_id}"
+  app_name        = "${var.app_name}"
   api_domain_name = "${var.api_domain_name}"
-  api_version = "${var.api_version}"
+  api_version     = "${var.api_version}"
+  api_stage       = "${var.api_stage}"
+  auth_app_secret = "${var.auth_app_secret}"
+  auth_app_password = "${var.auth_app_password}"
 }
 
 # test environment
