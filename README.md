@@ -22,4 +22,12 @@ Following packages are used in development environment:
 Beside package installation, no additional setup steps are required.
 
 ### Deployment
-Run `terraform apply --profile my-custom-account` to deploy to terraform
+Set necessary command line variables by calling
+1. `export AWS_ACCESS_KEY_ID="access-key-id"`
+2. `export AWS_SECRET_ACCESS_KEY="private-access-key"`
+
+Run `terraform apply` to deploy to terraform
+
+Unset variables after deployment.
+1. `unset AWS_ACCESS_KEY_ID`
+2. 'unset AWS_SECRET_ACCESS_KEY
