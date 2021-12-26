@@ -73,45 +73,6 @@ module "prod_cloudfront" {
   acm_certification_arn      = module.prod_certificate.arn_hosting
 }
 
-# storybook environment
-module "storybook_certificate" {
-  source           = "./acm-certificate"
-  root_domain_name = var.storybook_root_domain_name
-  www_domain_name  = var.storybook_www_domain_name
-}
-
-module "storybook_bucket" {
-  source = "./s3-hosting"
-
-  app_region       = var.app_region
-  account_id       = var.account_id
-  app_name         = var.app_name
-  root_domain_name = var.storybook_root_domain_name
-}
-
-module "storybook_cloudfront" {
-  source                     = "./cloudfront"
-  root_domain_name           = var.storybook_root_domain_name
-  www_domain_name            = var.storybook_www_domain_name
-  s3_bucket_website_endpoint = module.storybook_bucket.website_endpoint
-  acm_certification_arn      = module.storybook_certificate.arn_hosting
-}
-
-# api implementation
-module "gateway" {
-  source = "./gateway"
-
-  app_region        = var.app_region
-  account_id        = var.account_id
-  app_name          = var.app_name
-  api_domain_name   = var.api_domain_name
-  api_version       = var.api_version
-  api_stage         = var.api_stage
-  auth_app_secret   = var.auth_app_secret
-  auth_app_password = var.auth_app_password
-  api_app_email     = var.api_app_email
-}
-
 # test environment
 module "test_certificate" {
   source           = "./acm-certificate"
@@ -229,8 +190,6 @@ resource "aws_iam_role_policy" "master" {
       "Resource": [
         "${module.prod_bucket.bucket_arn}",
         "${module.prod_bucket.bucket_arn}/*",
-        "${module.storybook_bucket.bucket_arn}",
-        "${module.storybook_bucket.bucket_arn}/*",
         "${module.utils.bucket_arn}",
         "${module.utils.bucket_arn}/*"
       ]
