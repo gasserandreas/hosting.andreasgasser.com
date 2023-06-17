@@ -1,4 +1,4 @@
-# hosting.andreasgasser.com
+# hosting circletjewels
 
 This repo contains the hosting configuration for my personal web page. The web page is fully hosted `serverless` on the AWS cloud environment. Terraform is used to document and reproducible a consistent environment configuration.
 
